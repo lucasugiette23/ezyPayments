@@ -1,20 +1,28 @@
 package com.puzzle.ezypayments.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Table(name = "webhooks")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Webhook {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String endpoint;
+
+    @Column(nullable = false)
+    private String clientId;
+
+    @Column(nullable = false)
+    private String eventType;
 
 }
