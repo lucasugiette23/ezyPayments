@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: ezypayments-postgres
+    environment:
+      POSTGRES_DB: ezypayments
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./pg_hba.conf:/etc/postgresql/pg_hba.conf
+    command: [
+      "postgres",
+      "-c", "hba_file=/etc/postgresql/pg_hba.conf",
+      "-c", "listen_addresses=*"
+    ]
+
+volumes:
+  pgdata:
