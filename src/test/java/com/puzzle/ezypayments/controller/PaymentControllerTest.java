@@ -74,4 +74,39 @@ class PaymentControllerTest {
 
         assertThrows(IllegalArgumentException.class, () -> paymentController.processPayment(invalidPaymentDTO));
     }
+
+    @Test
+    void processPaymentReturnsBadRequestWhenPaymentDTOIsNull() {
+        assertThrows(IllegalArgumentException.class, () -> paymentController.processPayment(null));
+    }
+
+    @Test
+    void processPaymentReturnsBadRequestForInvalidCardNumber() {
+        PaymentDTO invalidPaymentDTO = PaymentDTO.builder()
+                .cvv("123")
+                .cardNumber("invalid_card_number")
+                .expiry("12/25")
+                .firstName("Lucas")
+                .lastName("Silva")
+                .build();
+
+        when(paymentService.processPayment(any(PaymentDTO.class))).thenThrow(new IllegalArgumentException("Invalid card number"));
+
+        assertThrows(IllegalArgumentException.class, () -> paymentController.processPayment(invalidPaymentDTO));
+    }
+
+    @Test
+    void processPaymentReturnsBadRequestForExpiredCard() {
+        PaymentDTO expiredCardDTO = PaymentDTO.builder()
+                .cvv("123")
+                .cardNumber("1234567890123456")
+                .expiry("01/20")
+                .firstName("Lucas")
+                .lastName("Silva")
+                .build();
+
+        when(paymentService.processPayment(any(PaymentDTO.class))).thenThrow(new IllegalArgumentException("Card expired"));
+
+        assertThrows(IllegalArgumentException.class, () -> paymentController.processPayment(expiredCardDTO));
+    }
 }
